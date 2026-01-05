@@ -5,7 +5,7 @@ function Player:new(x, y, image, World)
     self.vx, self.vy = 0, 0
     self.width, self.height = 16, 16
     self.image = love.graphics.newImage(image)
-    self.speed = 300
+    self.speed = 100
 
     World:add(self, self.x, self.y, self.width, self.height)
 end
