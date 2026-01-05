@@ -11,11 +11,13 @@ function love.load()
     Plr = require('classes.Player')
 
     -- Objects
-    Player = Plr(32, 32, 'res/img/Player-placeholder.png')
+    World = Bump.newWorld(16)
+
+    Player = Plr(32, 32, 'res/img/Player-placeholder.png', World)
 end
 
 function love.update(dt)
-    
+    Player:update(dt)
 end
 
 function love.draw()
