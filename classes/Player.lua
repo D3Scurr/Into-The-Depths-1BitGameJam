@@ -10,6 +10,18 @@ function Player:new(x, y, image, World)
     World:add(self, self.x, self.y, self.width, self.height)
 end
 
+local function resolveCollisions(self, cols, len)
+    for i = 1, len do
+        local col = cols[i]
+
+        -- Horizontal contact
+        if col.normal.x ~= 0 then
+            -- Collision
+            self.vx = 0
+        end
+    end
+end
+
 local function move(self, dt)
     -- Bump world
 
@@ -22,6 +34,8 @@ local function move(self, dt)
     
     self.onGround = false
     self.onLamp = false
+
+    resolveCollisions(self, cols, len)
 end
 
 local function handleLeft(self)

@@ -13,14 +13,30 @@ function love.load()
     -- Objects
     World = Bump.newWorld(16)
 
-    Player = Plr(32, 32, 'res/img/Player-placeholder.png', World)
+    Player = Plr(64, 64, 'res/img/Player-placeholder.png', World)
+
+    -- Wall
+    local leftWall = {}
+    local rightWall = {}
+
+    World:add(leftWall, 0, 0, 8, Config.BASE_HEIGHT)
+    World:add(rightWall, Config.BASE_WIDTH-9, 0, 8, Config.BASE_HEIGHT)
+
+    WallImageLeft = love.graphics.newImage('res/img/Wall-left.png')
+    WallImageRight = love.graphics.newImage('res/img/Wall-left.png')
 end
 
 function love.update(dt)
     Player:update(dt)
 end
 
+local function drawWalls()
+    love.graphics.draw(WallImageLeft, 0, 0)
+    love.graphics.draw(WallImageRight, Config.BASE_WIDTH-8, 0)
+end
+
 function love.draw()
     love.graphics.scale(Config.SCALE, Config.SCALE)
+    drawWalls()
     Player:draw()
 end

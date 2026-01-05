@@ -5,7 +5,7 @@ Config = {
     BASE_HEIGHT = 128,
     
     -- Scale multiplier
-    SCALE = 3,
+    SCALE = 6,
 }
 
 -- Calculated values
