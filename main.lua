@@ -20,10 +20,10 @@ function love.load()
     local rightWall = {}
 
     World:add(leftWall, 0, 0, 8, Config.BASE_HEIGHT)
-    World:add(rightWall, Config.BASE_WIDTH-9, 0, 8, Config.BASE_HEIGHT)
+    World:add(rightWall, Config.BASE_WIDTH-8, 0, 8, Config.BASE_HEIGHT)
 
     WallImageLeft = love.graphics.newImage('res/img/Wall-left.png')
-    WallImageRight = love.graphics.newImage('res/img/Wall-left.png')
+    WallImageRight = love.graphics.newImage('res/img/Wall-right.png')
 end
 
 function love.update(dt)
