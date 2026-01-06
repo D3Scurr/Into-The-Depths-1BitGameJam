@@ -5,7 +5,10 @@ function love.load()
     Config = require('config')
     love.graphics.setDefaultFilter('nearest', 'nearest')
     flipped = false
+
     math.randomseed(os.clock())
+
+    Ui = require('ui')
 
     -- Libraries
     Bump = require('libs.bump')
@@ -32,10 +35,6 @@ function love.load()
     Gamestate.switch(game)
 end
 
-function love.update(dt)
-    
-end
-
 function flipColors()
     if not flipped then
         love.graphics.setShader(InvertShader)
@@ -50,8 +49,4 @@ function love.keypressed(key)
     if key == 'f' then
         flipColors()
     end
-end
-
-function love.draw()
-    
 end

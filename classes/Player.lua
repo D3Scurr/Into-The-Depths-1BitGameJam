@@ -107,7 +107,6 @@ function Player:update(dt)
 end
 
 function Player:draw()
-    love.graphics.print("health: "..self.health, 0, 0)
     love.graphics.draw(self.image, self.x, self.y)
 end
 

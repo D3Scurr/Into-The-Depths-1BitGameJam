@@ -35,6 +35,7 @@ function game:draw()
     drawWalls()
     Player:draw()
     ObstacleHandler:draw()
+    Ui:draw()
 end
 
 return game

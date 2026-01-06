@@ -46,7 +46,6 @@ local function resolveCollisions(cols, len)
         local col = cols[i]
 
         if col.type == 'cross' then
-            print("CROSS")
             Player.health = Player.health - 1
             destroyOldObstacle()
         end
@@ -75,7 +74,6 @@ end
 
 function ObstacleHandler:draw()
     for _, Obstacle in pairs(ActiveObstacles) do
-        love.graphics.print("y: "..Obstacle.y, 0, 20)
         love.graphics.draw(Obstacle.image, Obstacle.x, Obstacle.y)
     end
 end
