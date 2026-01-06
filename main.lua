@@ -1,4 +1,5 @@
 local game = require('game')
+local GameOver = require('game-over')
 
 function love.load()
     -- Config
@@ -29,8 +30,6 @@ function love.load()
     -- Objects
     World = Bump.newWorld(16)
 
-    Player = Plr(Config.BASE_WIDTH / 2 - 8, Config.BASE_HEIGHT / 2 - 8, 'res/img/Player-placeholder.png')
-
     Gamestate.registerEvents()
     Gamestate.switch(game)
 end
@@ -48,5 +47,10 @@ end
 function love.keypressed(key)
     if key == 'f' then
         flipColors()
+    end
+    
+    if key == 'r' and Gamestate.current() == GameOver then
+        Player.health = 3
+        Gamestate.switch(game)
     end
 end

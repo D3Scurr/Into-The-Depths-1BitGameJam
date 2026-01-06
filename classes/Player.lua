@@ -1,5 +1,5 @@
 local Player = Object:extend()
-local GameOver = require('../game-over')
+local GameOver = require('game-over')
 
 function Player:new(x, y, image)
     self.x, self.y = x, y

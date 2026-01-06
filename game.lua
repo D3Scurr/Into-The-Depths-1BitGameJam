@@ -1,6 +1,8 @@
 local game = { }
 
 function game:init()
+    Player = Plr(Config.BASE_WIDTH / 2 - 8, Config.BASE_HEIGHT / 2 - 8, 'res/img/Player-placeholder.png')
+
     -- Wall
     local leftWall = { isWall = true }
     local rightWall = { isWall = true }
