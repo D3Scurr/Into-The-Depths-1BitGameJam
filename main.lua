@@ -44,6 +44,7 @@ function love.update(dt)
     Player:update(dt)
     Timer.update(dt)
     ObstacleTimer:update(dt)
+    ObstacleHandler:update(dt)
 end
 
 local function drawWalls()

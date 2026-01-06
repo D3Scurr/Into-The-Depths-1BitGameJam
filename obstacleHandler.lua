@@ -1,30 +1,58 @@
-local ObstacleHandler = {
-    WarnImage = love.graphics.newImage('res/img/Warn-block.png'),
-    ObstacleImage = love.graphics.newImage('res/img/Obstacle-box.png'),
-    showObstacle = false,
-    obstacleX = 0
-}
+local Config = require('config')
+local Obstacles = require('obstacles')
+
+local ObstacleHandler = { }
+
+local ActiveObstacles = { }
+
+local function addObstacle(Obstacle)
+    World:add(Obstacle, Obstacle.x, Obstacle.y, Obstacle.width, Obstacle.height)
+end
 
 function spawnNewObstacle()
-    ObstacleHandler.obstacleX = math.random(9, Config.BASE_WIDTH - 24)
-    ObstacleHandler.showObstacle = false
-    
     -- Warning phase: 2 seconds
     ObstacleTimer:after(2, function()
-        ObstacleHandler.showObstacle = true
+        -- Remove old obstacle if it exists
+        if #ActiveObstacles > 0 then
+            local oldObstacle = ActiveObstacles[1]
+            World:remove(oldObstacle)
+            table.remove(ActiveObstacles, 1)
+        end
+        
+        local newObstacle = Obstacles[1]
+        newObstacle.x, newObstacle.y = math.random(9, Config.BASE_WIDTH - 24), Config.BASE_HEIGHT - 16
+        newObstacle.vx, newObstacle.vy = 0, 0
+        addObstacle(newObstacle)
+        table.insert(ActiveObstacles, newObstacle)
     end)
     
-    -- Visible phase: 3 seconds (2 + 3 = 5 total)
-    ObstacleTimer:after(5, function()
+    -- Visible phase: 2 seconds
+    ObstacleTimer:after(2, function()
         spawnNewObstacle()
     end)
 end
 
+local function move(self, dt)
+    -- Bump world
+
+    local goalX = self.x + self.vx * dt;
+    local goalY = self.y + self.vy * dt;
+
+    local actualX, actualY, cols, len = World:move(self, goalX, goalY) -- need to resolve collsions
+
+    self.x, self.y = actualX, actualY
+end
+
+function ObstacleHandler:update(dt)
+    for _, Obstacle in pairs(ActiveObstacles) do
+        move(Obstacle, dt)
+        Obstacle.vy = -Obstacle.speed
+    end
+end
+
 function ObstacleHandler:draw()
-    if self.showObstacle then
-        love.graphics.draw(self.ObstacleImage, self.obstacleX, Config.BASE_HEIGHT - 16)
-    else
-        love.graphics.draw(self.WarnImage, self.obstacleX, Config.BASE_HEIGHT - 16)
+    for _, Obstacle in pairs(ActiveObstacles) do
+        love.graphics.draw(Obstacle.image, Obstacle.x, Obstacle.y)
     end
 end
 

@@ -1,5 +1,5 @@
 -- Global configuration variables
-Config = {
+local Config = {
     -- Base resolution
     BASE_WIDTH = 128,
     BASE_HEIGHT = 128,

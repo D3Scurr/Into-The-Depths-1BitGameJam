@@ -28,12 +28,9 @@ local function move(self, dt)
     local goalX = self.x + self.vx * dt;
     local goalY = self.y + self.vy * dt;
 
-    local actualX, actualY, cols, len = World:move(self, goalX, goalY) -- need to resolve collsions
+    local actualX, actualY, cols, len = World:move(self, goalX, goalY)
 
     self.x, self.y = actualX, actualY
-    
-    self.onGround = false
-    self.onLamp = false
 
     resolveCollisions(self, cols, len)
 end
