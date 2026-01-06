@@ -1,3 +1,5 @@
+local game = require('game')
+
 function love.load()
     -- Config
     Config = require('config')
@@ -7,9 +9,10 @@ function love.load()
 
     -- Libraries
     Bump = require('libs.bump')
+    Camera = require('libs.camera')
+    Gamestate = require('libs.gamestate')
     Object = require('libs.classic')
     Timer = require('libs.timer')
-    Camera = require('libs.camera')
 
     -- Classes
     Plr = require('classes.Player')
@@ -25,31 +28,12 @@ function love.load()
 
     Player = Plr(Config.BASE_WIDTH / 2 - 8, Config.BASE_HEIGHT / 2 - 8, 'res/img/Player-placeholder.png')
 
-    -- Wall
-    local leftWall = { isWall = true }
-    local rightWall = { isWall = true }
-
-    World:add(leftWall, 0, 0, 8, Config.BASE_HEIGHT)
-    World:add(rightWall, Config.BASE_WIDTH-8, 0, 8, Config.BASE_HEIGHT)
-
-    WallImageLeft = love.graphics.newImage('res/img/Wall-left.png')
-    WallImageRight = love.graphics.newImage('res/img/Wall-right.png')
-
-    -- Timers
-    ObstacleTimer = Timer()
-    spawnNewObstacle()
+    Gamestate.registerEvents()
+    Gamestate.switch(game)
 end
 
 function love.update(dt)
-    Player:update(dt)
-    Timer.update(dt)
-    ObstacleTimer:update(dt)
-    ObstacleHandler:update(dt)
-end
-
-local function drawWalls()
-    love.graphics.draw(WallImageLeft, 0, 0)
-    love.graphics.draw(WallImageRight, Config.BASE_WIDTH-8, 0)
+    
 end
 
 function flipColors()
@@ -69,8 +53,5 @@ function love.keypressed(key)
 end
 
 function love.draw()
-    love.graphics.scale(Config.SCALE, Config.SCALE)
-    drawWalls()
-    Player:draw()
-    ObstacleHandler:draw()
+    
 end

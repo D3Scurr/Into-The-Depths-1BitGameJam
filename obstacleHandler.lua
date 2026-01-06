@@ -47,6 +47,7 @@ local function resolveCollisions(cols, len)
 
         if col.type == 'cross' then
             print("CROSS")
+            Player.health = Player.health - 1
             destroyOldObstacle()
         end
     end
