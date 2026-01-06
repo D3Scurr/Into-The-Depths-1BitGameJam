@@ -26,8 +26,8 @@ function love.load()
     Player = Plr(Config.BASE_WIDTH / 2 - 8, Config.BASE_HEIGHT / 2 - 8, 'res/img/Player-placeholder.png')
 
     -- Wall
-    local leftWall = {}
-    local rightWall = {}
+    local leftWall = { isWall = true }
+    local rightWall = { isWall = true }
 
     World:add(leftWall, 0, 0, 8, Config.BASE_HEIGHT)
     World:add(rightWall, Config.BASE_WIDTH-8, 0, 8, Config.BASE_HEIGHT)

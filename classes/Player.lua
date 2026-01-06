@@ -6,6 +6,9 @@ function Player:new(x, y, image)
     self.width, self.height = 16, 16
     self.image = love.graphics.newImage(image)
     self.speed = 100
+    self.isPlayer = true
+
+    self.health = 3
 
     World:add(self, self.x, self.y, self.width, self.height)
 end
@@ -15,10 +18,17 @@ local function resolveCollisions(self, cols, len)
         local col = cols[i]
 
         -- Horizontal contact
-        if col.normal.x ~= 0 then
-            -- Collision
-            self.vx = 0
+        if col.type == 'slide' then
+            if col.normal.x ~= 0 then
+                self.vx = 0
+            end
         end
+    end
+end
+
+local ObjectFilter = function (item, other)
+    if other.isObstacle then return 'cross'
+    elseif other.isWall then return 'slide'
     end
 end
 
@@ -28,7 +38,7 @@ local function move(self, dt)
     local goalX = self.x + self.vx * dt;
     local goalY = self.y + self.vy * dt;
 
-    local actualX, actualY, cols, len = World:move(self, goalX, goalY)
+    local actualX, actualY, cols, len = World:move(self, goalX, goalY, ObjectFilter)
 
     self.x, self.y = actualX, actualY
 
@@ -66,6 +76,7 @@ function Player:update(dt)
 end
 
 function Player:draw()
+    love.graphics.print("health: "..self.health, 0, 0)
     love.graphics.draw(self.image, self.x, self.y)
 end
 
