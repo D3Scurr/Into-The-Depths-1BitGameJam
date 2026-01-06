@@ -12,13 +12,17 @@ function love.load()
     -- Classes
     Plr = require('classes.Player')
 
+    -- Code Chunks
+    ObstacleHandler = require('obstacleHandler')
+    Timer = require('timer')
+
     -- Shaders
     InvertShader = love.graphics.newShader('res/shaders/invert.glsl')
 
     -- Objects
     World = Bump.newWorld(16)
 
-    Player = Plr(Config.BASE_WIDTH / 2 - 8, Config.BASE_HEIGHT / 2 - 8, 'res/img/Player-placeholder.png', World)
+    Player = Plr(Config.BASE_WIDTH / 2 - 8, Config.BASE_HEIGHT / 2 - 8, 'res/img/Player-placeholder.png')
 
     -- Wall
     local leftWall = {}
@@ -29,33 +33,11 @@ function love.load()
 
     WallImageLeft = love.graphics.newImage('res/img/Wall-left.png')
     WallImageRight = love.graphics.newImage('res/img/Wall-right.png')
-
-    -- Timers
-    Timer = {
-        ObstacleWait = 0,
-        ObstacleOnScreen = 0
-    }
-
-    -- Obstacles
-    Obstacle = {
-        width = 16,
-        height = 16
-    }
-
-    Obstacle.x = math.random(9, Config.BASE_WIDTH - 8 - Obstacle.width)
-
-    ObstacleList = {}
-
-    WarnImage = love.graphics.newImage('res/img/Warn-block.png')
-    ObstacleImage = love.graphics.newImage('res/img/Obstacle-box.png')
 end
 
 function love.update(dt)
     Player:update(dt)
-    Timer.ObstacleWait = Timer.ObstacleWait + dt
-    if Timer.ObstacleWait >= 2 then
-        Timer.ObstacleOnScreen = Timer.ObstacleOnScreen + dt
-    end
+    Timer:update(dt)
 end
 
 local function drawWalls()
@@ -83,15 +65,5 @@ function love.draw()
     love.graphics.scale(Config.SCALE, Config.SCALE)
     drawWalls()
     Player:draw()
-    if Timer.ObstacleWait >= 2 then
-        if Timer.ObstacleOnScreen < 2 then
-            love.graphics.draw(ObstacleImage, Obstacle.x, Config.BASE_HEIGHT - 16)
-        else
-            Timer.ObstacleWait = 0
-            Timer.ObstacleOnScreen = 0
-            Obstacle.x = math.random(9, Config.BASE_WIDTH-8-Obstacle.width)
-        end
-    else
-        love.graphics.draw(WarnImage, Obstacle.x, Config.BASE_HEIGHT - 16)
-    end
+    ObstacleHandler:draw()
 end

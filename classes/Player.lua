@@ -1,6 +1,6 @@
-Player = Object:extend()
+local Player = Object:extend()
 
-function Player:new(x, y, image, World)
+function Player:new(x, y, image)
     self.x, self.y = x, y
     self.vx, self.vy = 0, 0
     self.width, self.height = 16, 16
