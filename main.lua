@@ -8,13 +8,14 @@ function love.load()
     -- Libraries
     Bump = require('libs.bump')
     Object = require('libs.classic')
+    Timer = require('libs.timer')
+    Camera = require('libs.camera')
 
     -- Classes
     Plr = require('classes.Player')
 
     -- Code Chunks
     ObstacleHandler = require('obstacleHandler')
-    Timer = require('timer')
 
     -- Shaders
     InvertShader = love.graphics.newShader('res/shaders/invert.glsl')
@@ -33,11 +34,16 @@ function love.load()
 
     WallImageLeft = love.graphics.newImage('res/img/Wall-left.png')
     WallImageRight = love.graphics.newImage('res/img/Wall-right.png')
+
+    -- Timers
+    ObstacleTimer = Timer()
+    spawnNewObstacle()
 end
 
 function love.update(dt)
     Player:update(dt)
-    Timer:update(dt)
+    Timer.update(dt)
+    ObstacleTimer:update(dt)
 end
 
 local function drawWalls()

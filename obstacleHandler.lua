@@ -1,26 +1,30 @@
 local ObstacleHandler = {
     WarnImage = love.graphics.newImage('res/img/Warn-block.png'),
-    ObstacleImage = love.graphics.newImage('res/img/Obstacle-box.png')
+    ObstacleImage = love.graphics.newImage('res/img/Obstacle-box.png'),
+    showObstacle = false,
+    obstacleX = 0
 }
 
-local Obstacle = {
-    width = 16,
-    height = 16,
-}
-
-Obstacle.x = math.random(9, Config.BASE_WIDTH - 8 - Obstacle.width)
+function spawnNewObstacle()
+    ObstacleHandler.obstacleX = math.random(9, Config.BASE_WIDTH - 24)
+    ObstacleHandler.showObstacle = false
+    
+    -- Warning phase: 2 seconds
+    ObstacleTimer:after(2, function()
+        ObstacleHandler.showObstacle = true
+    end)
+    
+    -- Visible phase: 3 seconds (2 + 3 = 5 total)
+    ObstacleTimer:after(5, function()
+        spawnNewObstacle()
+    end)
+end
 
 function ObstacleHandler:draw()
-    if Timer.ObstacleWait >= 2 then
-        if Timer.ObstacleOnScreen < 2 then
-            love.graphics.draw(self.ObstacleImage, Obstacle.x, Config.BASE_HEIGHT - 16)
-        else
-            Timer.ObstacleWait = 0
-            Timer.ObstacleOnScreen = 0
-            Obstacle.x = math.random(9, Config.BASE_WIDTH-8-Obstacle.width)
-        end
+    if self.showObstacle then
+        love.graphics.draw(self.ObstacleImage, self.obstacleX, Config.BASE_HEIGHT - 16)
     else
-        love.graphics.draw(self.WarnImage, Obstacle.x, Config.BASE_HEIGHT - 16)
+        love.graphics.draw(self.WarnImage, self.obstacleX, Config.BASE_HEIGHT - 16)
     end
 end
 
