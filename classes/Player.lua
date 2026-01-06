@@ -6,7 +6,8 @@ function Player:new(x, y, image)
     self.vx, self.vy = 0, 0
     self.width, self.height = 16, 16
     self.image = love.graphics.newImage(image)
-    self.speed = 100
+    self.horizontalSpeed = 100
+    self.downSpeed, self.upSpeed = 30, 300
     self.isPlayer = true
 
     self.health = 3
@@ -47,27 +48,49 @@ local function move(self, dt)
 end
 
 local function handleLeft(self)
-    self.vx = -self.speed
+    self.vx = -self.horizontalSpeed
 end
 
 local function handleRight(self)
-    self.vx = self.speed
+    self.vx = self.horizontalSpeed
 end
 
-local function stop(self)
+local function handleUp(self)
+    self.vy = -self.upSpeed
+end
+
+local function handleDown(self)
+    self.vy = self.downSpeed
+end
+
+local function stopHorizontal(self)
     self.vx = 0
+end
+
+local function stopVertical(self)
+    self.vy = 0
 end
 
 local function handleInputs(self)
     local left = love.keyboard.isDown('left')
     local right = love.keyboard.isDown('right')
-
+    local up = love.keyboard.isDown('up')
+    local down = love.keyboard.isDown('down')
+    
     if left and not right then
         handleLeft(self)
     elseif right and not left then
         handleRight(self)
     else
-        stop(self)
+        stopHorizontal(self)
+    end
+
+    if up and not down and self.y > 32 then
+        handleUp(self)
+    elseif down and not up and self.y < 80 then
+        handleDown(self)
+    else
+        stopVertical(self)
     end
 end
 
