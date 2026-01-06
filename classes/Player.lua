@@ -1,4 +1,5 @@
-Player = Object:extend()
+local Player = Object:extend()
+local GameOver = require('../game-over')
 
 function Player:new(x, y, image)
     self.x, self.y = x, y
@@ -70,19 +71,21 @@ local function handleInputs(self)
     end
 end
 
--- local function healthCheck(self)
---     if self.health <= 0 then
-        
---     end
--- end
+local function healthCheck(self)
+    if self.health <= 0 then
+        Gamestate.switch(GameOver)
+    end
+end
 
 function Player:update(dt)
     move(self, dt)
     handleInputs(self)
-    -- healthCheck(self)
+    healthCheck(self)
 end
 
 function Player:draw()
     love.graphics.print("health: "..self.health, 0, 0)
     love.graphics.draw(self.image, self.x, self.y)
 end
+
+return Player
