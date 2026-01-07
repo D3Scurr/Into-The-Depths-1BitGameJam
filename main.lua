@@ -3,10 +3,11 @@ local GameOver = require('game-over')
 
 function love.load()
     -- Config
+    HighScore = 0
     Config = require('config')
     love.graphics.setDefaultFilter('nearest', 'nearest')
     flipped = false
-    love.graphics.setNewFont('Pixelout.ttf')
+    -- love.graphics.setNewFont('8-bit Arcade In.ttf')
 
     math.randomseed(os.clock())
 
@@ -30,6 +31,7 @@ function love.load()
 
     -- Objects
     World = Bump.newWorld(16)
+    Player = Plr(Config.BASE_WIDTH / 2 - 8, Config.BASE_HEIGHT / 2 - 8, 'res/img/Player-placeholder.png')
 
     Gamestate.registerEvents()
     Gamestate.switch(game)
@@ -51,7 +53,6 @@ function love.keypressed(key)
     end
     
     if key == 'r' and Gamestate.current() == GameOver then
-        Player.health = 3
         Gamestate.switch(game)
     end
 end

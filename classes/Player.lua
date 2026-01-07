@@ -3,6 +3,7 @@ local GameOver = require('game-over')
 
 function Player:new(x, y, image)
     self.x, self.y = x, y
+    self.baseX, self.baseY = x, y
     self.vx, self.vy = 0, 0
     self.width, self.height = 16, 16
     self.image = love.graphics.newImage(image)
@@ -11,8 +12,16 @@ function Player:new(x, y, image)
     self.isPlayer = true
 
     self.health = 3
+    self.score = 0
 
     World:add(self, self.x, self.y, self.width, self.height)
+end
+
+function Player:reset()
+    self.score = 0
+    self.health = 3
+    self.x, self.y = self.baseX, self.baseY
+    self.vx, self.vy = 0, 0
 end
 
 local function resolveCollisions(self, cols, len)
@@ -96,6 +105,9 @@ end
 
 local function healthCheck(self)
     if self.health <= 0 then
+        if self.score > HighScore then
+            HighScore = self.score
+        end
         Gamestate.switch(GameOver)
     end
 end

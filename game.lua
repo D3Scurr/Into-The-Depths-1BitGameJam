@@ -1,8 +1,6 @@
 local game = { }
 
 function game:init()
-    Player = Plr(Config.BASE_WIDTH / 2 - 8, Config.BASE_HEIGHT / 2 - 8, 'res/img/Player-placeholder.png')
-
     -- Wall
     local leftWall = { isWall = true }
     local rightWall = { isWall = true }
@@ -13,14 +11,38 @@ function game:init()
     WallImageLeft = love.graphics.newImage('res/img/Wall-left.png')
     WallImageRight = love.graphics.newImage('res/img/Wall-right.png')
 
+    Cam = Camera()
+
+    Cam:lookAt(16, 0)
+end
+
+function game:enter()
+    ObstacleHandler:reset()
+    Player:reset()
+
     -- Timers
     ObstacleTimer = Timer()
+    ScoreTimer = Timer()
+
+    ScoreTimer:every(0.1, function()
+        Player.score = Player.score + 1
+    end)
+
+    ScoreTimer:every(10, function()
+        ObstacleSpeedMult = ObstacleSpeedMult + ObstacleSpeedAdd
+        ObstacleSpeedAdd = ObstacleSpeedAdd * 1.2
+
+        ObstacleSpawnMult = ObstacleSpawnMult + ObstacleSpawnAdd
+        ObstacleSpeedAdd = ObstacleSpawnAdd * 2
+    end)
+
     spawnNewObstacle()
 end
 
 function game:update(dt)
     Player:update(dt)
     Timer.update(dt)
+    ScoreTimer:update(dt)
     ObstacleTimer:update(dt)
     ObstacleHandler:update(dt)
 end

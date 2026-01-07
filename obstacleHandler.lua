@@ -3,8 +3,20 @@ local Obstacles = require('obstacles')
 
 local ObstacleHandler = { }
 
-local WarnedObstacles = {}
+local WarnedObstacles = { }
 local ActiveObstacles = { }
+
+ObstacleSpeedMult = 1
+ObstacleSpeedAdd = 0.1
+
+ObstacleSpawnMult = 1
+ObstacleSpawnAdd = -0.05
+
+function ObstacleHandler:reset()
+    WarnedObstacles = { }
+    ActiveObstacles = { }
+    ObstacleSpeedMult = 1
+end
 
 local function addObstacle(Obstacle)
     World:add(Obstacle, Obstacle.x, Obstacle.y, Obstacle.width, Obstacle.height)
@@ -42,7 +54,7 @@ function spawnNewObstacle()
     table.insert(WarnedObstacles, newObstacle)
     
     -- Warning phase: 2 seconds
-    ObstacleTimer:after(2, function()
+    ObstacleTimer:after(2 * ObstacleSpawnMult, function()
         table.remove(WarnedObstacles, 1)
 
         -- Remove old obstacle if it exists
@@ -57,7 +69,7 @@ function spawnNewObstacle()
     end)
     
     -- Visible phase: 2 seconds
-    ObstacleTimer:after(2, function()
+    ObstacleTimer:after(2 * ObstacleSpawnMult, function()
         spawnNewObstacle()
     end)
 end
@@ -94,7 +106,7 @@ end
 function ObstacleHandler:update(dt)
     for _, Obstacle in pairs(ActiveObstacles) do
         move(Obstacle, dt)
-        Obstacle.vy = -Obstacle.speed
+        Obstacle.vy = -Obstacle.speed * ObstacleSpeedMult
     end
 end
 
