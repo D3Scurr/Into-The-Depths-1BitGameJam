@@ -12,8 +12,6 @@ function game:init()
     WallImageRight = love.graphics.newImage('res/img/Wall-right.png')
 
     Cam = Camera()
-
-    Cam:lookAt(16, 0)
 end
 
 function game:enter()
@@ -23,6 +21,7 @@ function game:enter()
     -- Timers
     ObstacleTimer = Timer()
     ScoreTimer = Timer()
+    ShakeTimer = Timer()
 
     ScoreTimer:every(0.1, function()
         Player.score = Player.score + 1
@@ -39,10 +38,25 @@ function game:enter()
     spawnNewObstacle()
 end
 
+function ScreenShake()
+    local orig_x, orig_y = Cam:position()
+    ShakeTimer:during(1, function()
+        Cam:lookAt(orig_x + math.random(-2,2), orig_y + math.random(-2,2))
+    end, function()
+        -- reset Camera position
+        Cam:lookAt(orig_x, orig_y)
+    end)
+end
+
 function game:update(dt)
+    Cam:lookAt(Config.WINDOW_WIDTH/2, Config.WINDOW_HEIGHT/2)
+
     Player:update(dt)
+
+    -- Timer update
     Timer.update(dt)
     ScoreTimer:update(dt)
+    ShakeTimer:update(dt)
     ObstacleTimer:update(dt)
     ObstacleHandler:update(dt)
 end
@@ -55,11 +69,13 @@ local function drawWalls()
 end
 
 function game:draw()
-    love.graphics.scale(Config.SCALE, Config.SCALE)
-    drawWalls()
-    Player:draw()
-    ObstacleHandler:draw()
-    Ui:draw()
+    Cam:attach()
+        love.graphics.scale(Config.SCALE, Config.SCALE)
+        drawWalls()
+        Player:draw()
+        ObstacleHandler:draw()
+        Ui:draw()
+    Cam:detach()
 end
 
 return game

@@ -85,6 +85,7 @@ local function resolveCollisions(cols, len)
 
         if col.type == 'cross' then
             Player.health = Player.health - 1
+            ScreenShake()
             destroyOldObstacle()
         end
     end
