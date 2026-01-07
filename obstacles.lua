@@ -1,5 +1,3 @@
--- local Config = require('config')
-
 local obstacles = {
     {
         type = 1,

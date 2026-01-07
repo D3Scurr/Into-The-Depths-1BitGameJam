@@ -2,6 +2,8 @@ local Config = require('config')
 local Obstacles = require('obstacles')
 
 local ObstacleHandler = { }
+
+local WarnedObstacles = {}
 local ActiveObstacles = { }
 
 local function addObstacle(Obstacle)
@@ -14,16 +16,40 @@ local function destroyOldObstacle()
     table.remove(ActiveObstacles, 1)
 end
 
+local function createObstacleInstance(obstacleTemplate)
+    -- Create a new instance based on the template
+    local newObstacle = {
+        type = obstacleTemplate.type,
+        name = obstacleTemplate.name,
+        warnImage = obstacleTemplate.warnImage,
+        image = obstacleTemplate.image,
+        speed = obstacleTemplate.speed,
+        height = obstacleTemplate.height,
+        width = obstacleTemplate.width,
+        isObstacle = false,
+        x = 0,
+        y = 0,
+        vx = 0,
+        vy = 0
+    }
+    return newObstacle
+end
+
 function spawnNewObstacle()
+    local newObstacle = createObstacleInstance(Obstacles[1])
+    newObstacle.x, newObstacle.y = math.random(9, Config.BASE_WIDTH - 8 - newObstacle.width), Config.BASE_HEIGHT - newObstacle.height
+    
+    table.insert(WarnedObstacles, newObstacle)
+    
     -- Warning phase: 2 seconds
     ObstacleTimer:after(2, function()
+        table.remove(WarnedObstacles, 1)
+
         -- Remove old obstacle if it exists
         if #ActiveObstacles > 0 then
             destroyOldObstacle()
         end
         
-        local newObstacle = Obstacles[1]
-        newObstacle.x, newObstacle.y = math.random(9, Config.BASE_WIDTH - 24), Config.BASE_HEIGHT - 16
         newObstacle.vx, newObstacle.vy = 0, 0
         newObstacle.isObstacle = true
         addObstacle(newObstacle)
@@ -73,6 +99,12 @@ function ObstacleHandler:update(dt)
 end
 
 function ObstacleHandler:draw()
+    -- Draw warns for obstacles
+    for _, Obstacle in pairs(WarnedObstacles) do
+        love.graphics.draw(Obstacle.warnImage, Obstacle.x, Obstacle.y)
+    end
+
+    -- Draw active obstacles
     for _, Obstacle in pairs(ActiveObstacles) do
         love.graphics.draw(Obstacle.image, Obstacle.x, Obstacle.y)
     end

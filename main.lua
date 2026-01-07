@@ -6,6 +6,7 @@ function love.load()
     Config = require('config')
     love.graphics.setDefaultFilter('nearest', 'nearest')
     flipped = false
+    love.graphics.setNewFont('Pixelout.ttf')
 
     math.randomseed(os.clock())
 
