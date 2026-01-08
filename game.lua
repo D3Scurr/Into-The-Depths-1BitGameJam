@@ -51,7 +51,7 @@ end
 
 function ScreenShake()
     local orig_x, orig_y = Cam:position()
-    ShakeTimer:during((Player.isBunk and 0.5 or 1), function()
+    ShakeTimer:during((Player.isBunk and 0.5 or 0.8), function()
         Cam:lookAt(orig_x + math.random(-2,2), orig_y + math.random(-2,2))
     end, function()
         -- reset Camera position

@@ -20,7 +20,7 @@ function Player:new(x, y, image)
     -- Bunk values
     self.isBunk = false
     self.bunkDuration = 1
-    self.bunkPoints = 3
+    self.bunkPoints = 2
     self.bunkPointsCap = 3
 
     self.bunkMeter = 0
@@ -34,6 +34,10 @@ function Player:reset()
     self.health = 3
     self.x, self.y = self.baseX, self.baseY
     self.vx, self.vy = 0, 0
+    
+    self.isBunk = false
+    self.bunkPoints = 2
+    self.bunkMeter = 0
 end
 
 local function resolveCollisions(self, cols, len)
@@ -128,7 +132,6 @@ local function handleInputs(self)
     end
 
     if bunk and not disableBunk and not bunkWasPressed and self.bunkPoints > 0 then
-        print('SPACE PRESSED')
         handleBunk(self)
     end
 end
@@ -145,6 +148,10 @@ local function statCheck(self)
         self.bunkMeter = 0
         self.bunkPoints = self.bunkPoints + 1
     end
+
+    -- if self.bunkPoints >= self.bunkPoints then
+    --     self.bunkMeter = 0
+    -- end
 end
 
 function Player:update(dt)

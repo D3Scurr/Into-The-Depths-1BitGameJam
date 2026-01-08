@@ -12,6 +12,8 @@ ObstacleSpeedAdd = 0.1
 ObstacleSpawnMult = 1
 ObstacleSpawnAdd = -0.05
 
+local bunkMeterBonus = 10
+
 function ObstacleHandler:reset()
     WarnedObstacles = { }
     ActiveObstacles = { }
@@ -86,6 +88,12 @@ local function resolveCollisions(cols, len)
         if col.type == 'cross' then
             if not Player.isBunk then
                 Player.health = Player.health - 1
+                Player.bunkMeter = 0
+            else
+                Player.bunkMeter = Player.bunkMeter + bunkMeterBonus
+                if col.normal.x ~= 0 then
+                    Player.bunkPoints = Player.bunkPoints + 1
+                end
             end
             ScreenShake()
             destroyOldObstacle()
