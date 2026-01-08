@@ -20,6 +20,11 @@ function Player:new(x, y, image)
     -- Bunk values
     self.isBunk = false
     self.bunkDuration = 1
+    self.bunkPoints = 3
+    self.bunkPointsCap = 3
+
+    self.bunkMeter = 0
+    self.bunkCap = 100
 
     World:add(self, self.x, self.y, self.width, self.height)
 end
@@ -87,8 +92,9 @@ local function stopVertical(self)
     self.vy = 0
 end
 
-local function activateBunk(self)
+local function handleBunk(self)
     self.isBunk = true
+    self.bunkPoints = self.bunkPoints - 1
     disableBunk = true
     BunkTimer:during(self.bunkDuration, function()
         
@@ -121,25 +127,30 @@ local function handleInputs(self)
         stopVertical(self)
     end
 
-    if bunk and not disableBunk and not bunkWasPressed then
+    if bunk and not disableBunk and not bunkWasPressed and self.bunkPoints > 0 then
         print('SPACE PRESSED')
-        activateBunk(self)
+        handleBunk(self)
     end
 end
 
-local function healthCheck(self)
+local function statCheck(self)
     if self.health <= 0 then
         if self.score > HighScore then
             HighScore = self.score
         end
         Gamestate.switch(GameOver)
     end
+
+    if self.bunkMeter >= 100 and self.bunkPoints < self.bunkPointsCap then
+        self.bunkMeter = 0
+        self.bunkPoints = self.bunkPoints + 1
+    end
 end
 
 function Player:update(dt)
     move(self, dt)
     handleInputs(self)
-    healthCheck(self)
+    statCheck(self)
     bunkWasPressed = love.keyboard.isDown('space')
 end
 

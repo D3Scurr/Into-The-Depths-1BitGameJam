@@ -1,5 +1,7 @@
 local game = { }
 
+local bunkAdd = 2
+
 function game:init()
     -- Wall
     local leftWall = { isWall = true }
@@ -20,9 +22,17 @@ function game:enter()
 
     -- Timers
     BunkTimer = Timer()
+    BunkMeterTimer = Timer()
     ObstacleTimer = Timer()
     ScoreTimer = Timer()
     ShakeTimer = Timer()
+
+    BunkMeterTimer:every(0.2, function ()
+        if (Player.bunkMeter < Player.bunkCap) and (Player.bunkPoints < Player.bunkPointsCap) then
+            Player.bunkMeter = Player.bunkMeter + bunkAdd
+            print(Player.bunkMeter)
+        end
+    end)
 
     ScoreTimer:every(0.1, function()
         Player.score = Player.score + 1
@@ -41,7 +51,7 @@ end
 
 function ScreenShake()
     local orig_x, orig_y = Cam:position()
-    ShakeTimer:during(1, function()
+    ShakeTimer:during((Player.isBunk and 0.5 or 1), function()
         Cam:lookAt(orig_x + math.random(-2,2), orig_y + math.random(-2,2))
     end, function()
         -- reset Camera position
@@ -52,6 +62,7 @@ end
 local function updateTimers(dt)
     Timer.update(dt)
     BunkTimer:update(dt)
+    BunkMeterTimer:update(dt)
     ScoreTimer:update(dt)
     ShakeTimer:update(dt)
     ObstacleTimer:update(dt)
