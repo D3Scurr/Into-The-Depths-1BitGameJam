@@ -19,6 +19,7 @@ function game:enter()
     Player:reset()
 
     -- Timers
+    BunkTimer = Timer()
     ObstacleTimer = Timer()
     ScoreTimer = Timer()
     ShakeTimer = Timer()
@@ -48,16 +49,21 @@ function ScreenShake()
     end)
 end
 
-function game:update(dt)
-    Cam:lookAt(Config.WINDOW_WIDTH/2, Config.WINDOW_HEIGHT/2)
-
-    Player:update(dt)
-
-    -- Timer update
+local function updateTimers(dt)
     Timer.update(dt)
+    BunkTimer:update(dt)
     ScoreTimer:update(dt)
     ShakeTimer:update(dt)
     ObstacleTimer:update(dt)
+end
+
+function game:update(dt)
+    Cam:lookAt(Config.WINDOW_WIDTH/2, Config.WINDOW_HEIGHT/2)
+
+    updateTimers(dt)
+
+    Player:update(dt)
+
     ObstacleHandler:update(dt)
 end
 

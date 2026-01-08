@@ -7,7 +7,7 @@ function love.load()
     Config = require('config')
     love.graphics.setDefaultFilter('nearest', 'nearest')
     flipped = false
-    -- love.graphics.setNewFont('8-bit Arcade In.ttf')
+    love.graphics.setNewFont('PressStart2P.ttf')
 
     math.randomseed(os.clock())
 

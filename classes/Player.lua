@@ -1,6 +1,9 @@
 local Player = Object:extend()
 local GameOver = require('game-over')
 
+local disableBunk = false
+local bunkWasPressed = false
+
 function Player:new(x, y, image)
     self.x, self.y = x, y
     self.baseX, self.baseY = x, y
@@ -13,6 +16,10 @@ function Player:new(x, y, image)
 
     self.health = 3
     self.score = 0
+
+    -- Bunk values
+    self.isBunk = false
+    self.bunkDuration = 1
 
     World:add(self, self.x, self.y, self.width, self.height)
 end
@@ -80,11 +87,23 @@ local function stopVertical(self)
     self.vy = 0
 end
 
+local function activateBunk(self)
+    self.isBunk = true
+    disableBunk = true
+    BunkTimer:during(self.bunkDuration, function()
+        
+    end, function()
+        self.isBunk = false
+        disableBunk = false
+    end)
+end
+
 local function handleInputs(self)
     local left = love.keyboard.isDown('left')
     local right = love.keyboard.isDown('right')
     local up = love.keyboard.isDown('up')
     local down = love.keyboard.isDown('down')
+    local bunk = love.keyboard.isDown('space')
     
     if left and not right then
         handleLeft(self)
@@ -101,6 +120,11 @@ local function handleInputs(self)
     else
         stopVertical(self)
     end
+
+    if bunk and not disableBunk and not bunkWasPressed then
+        print('SPACE PRESSED')
+        activateBunk(self)
+    end
 end
 
 local function healthCheck(self)
@@ -116,10 +140,13 @@ function Player:update(dt)
     move(self, dt)
     handleInputs(self)
     healthCheck(self)
+    bunkWasPressed = love.keyboard.isDown('space')
 end
 
 function Player:draw()
+    if self.isBunk then flipColors() end
     love.graphics.draw(self.image, self.x, self.y)
+    if self.isBunk then flipColors() end
 end
 
 return Player
