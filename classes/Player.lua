@@ -50,6 +50,14 @@ local function resolveCollisions(self, cols, len)
                 self.vx = 0
             end
         end
+
+        if col.type == 'cross' then
+            print('col.normal.x: '..col.normal.x)
+            print('col.normal.y: '..col.normal.y)
+            if col.normal.x ~= 0 then
+                self.bunkPoints = self.bunkPoints + 1
+            end
+        end
     end
 end
 

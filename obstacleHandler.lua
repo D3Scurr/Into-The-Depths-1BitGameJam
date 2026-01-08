@@ -91,9 +91,6 @@ local function resolveCollisions(cols, len)
                 Player.bunkMeter = 0
             else
                 Player.bunkMeter = Player.bunkMeter + bunkMeterBonus
-                if col.normal.x ~= 0 then
-                    Player.bunkPoints = Player.bunkPoints + 1
-                end
             end
             ScreenShake()
             destroyOldObstacle()

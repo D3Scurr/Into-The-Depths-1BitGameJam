@@ -30,7 +30,6 @@ function game:enter()
     BunkMeterTimer:every(0.2, function ()
         if (Player.bunkMeter < Player.bunkCap) and (Player.bunkPoints < Player.bunkPointsCap) then
             Player.bunkMeter = Player.bunkMeter + bunkAdd
-            print(Player.bunkMeter)
         end
     end)
 
