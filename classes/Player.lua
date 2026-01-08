@@ -157,9 +157,9 @@ local function statCheck(self)
         self.bunkPoints = self.bunkPoints + 1
     end
 
-    -- if self.bunkPoints >= self.bunkPoints then
-    --     self.bunkMeter = 0
-    -- end
+    if self.bunkPoints >= self.bunkPointsCap then
+        self.bunkMeter = 0
+    end
 end
 
 function Player:update(dt)

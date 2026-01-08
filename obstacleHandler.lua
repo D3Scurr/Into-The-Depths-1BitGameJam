@@ -90,7 +90,9 @@ local function resolveCollisions(cols, len)
                 Player.health = Player.health - 1
                 Player.bunkMeter = 0
             else
-                Player.bunkMeter = Player.bunkMeter + bunkMeterBonus
+                if not (Player.vx == 0 and Player.vy == 0) then
+                    Player.bunkMeter = Player.bunkMeter + bunkMeterBonus
+                end
             end
             ScreenShake()
             destroyOldObstacle()
