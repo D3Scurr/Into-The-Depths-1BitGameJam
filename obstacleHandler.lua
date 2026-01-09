@@ -50,7 +50,7 @@ local function createObstacleInstance(obstacleTemplate)
 end
 
 function spawnNewObstacle()
-    local newObstacle = createObstacleInstance(Obstacles[1])
+    local newObstacle = createObstacleInstance(Obstacles[math.random(1,2)])
     newObstacle.x, newObstacle.y = math.random(9, Config.BASE_WIDTH - 8 - newObstacle.width), Config.BASE_HEIGHT - newObstacle.height
     
     table.insert(WarnedObstacles, newObstacle)

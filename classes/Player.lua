@@ -3,6 +3,7 @@ local GameOver = require('game-over')
 
 local disableBunk = false
 local bunkWasPressed = false
+local committedChargeDirection = 0
 
 function Player:new(x, y, image)
     self.x, self.y = x, y
@@ -11,7 +12,7 @@ function Player:new(x, y, image)
     self.width, self.height = 16, 16
     self.image = love.graphics.newImage(image)
     self.horizontalSpeed = 100
-    self.downSpeed, self.upSpeed = 30, 300
+    self.downSpeed, self.upSpeed, self.chargeSpeed = 30, 300, 150
     self.isPlayer = true
 
     self.health = 3
@@ -48,6 +49,7 @@ local function resolveCollisions(self, cols, len)
         if col.type == 'slide' then
             if col.normal.x ~= 0 then
                 self.vx = 0
+                self.isBunk = false
             end
         end
 
@@ -96,6 +98,10 @@ local function handleDown(self)
     self.vy = self.downSpeed
 end
 
+local function handleCharge(self, direction)
+    self.vx = self.chargeSpeed * direction
+end
+
 local function stopHorizontal(self)
     self.vx = 0
 end
@@ -122,13 +128,31 @@ local function handleInputs(self)
     local up = love.keyboard.isDown('up')
     local down = love.keyboard.isDown('down')
     local bunk = love.keyboard.isDown('space')
+
+    if bunk and not disableBunk and not bunkWasPressed and self.bunkPoints > 0 then
+        handleBunk(self)
+    end
+
+    if bunk then
+        if left and not right then
+            committedChargeDirection = -1
+        elseif right and not left then
+            committedChargeDirection = 1
+        else
+            committedChargeDirection = 0
+        end
+    end
     
-    if left and not right then
-        handleLeft(self)
-    elseif right and not left then
-        handleRight(self)
+    if not self.isBunk then
+        if left and not right then
+            handleLeft(self)
+        elseif right and not left then
+            handleRight(self)
+        else
+            stopHorizontal(self)
+        end
     else
-        stopHorizontal(self)
+        handleCharge(self, committedChargeDirection)
     end
 
     if up and not down and self.y > 32 then
@@ -137,10 +161,6 @@ local function handleInputs(self)
         handleDown(self)
     else
         stopVertical(self)
-    end
-
-    if bunk and not disableBunk and not bunkWasPressed and self.bunkPoints > 0 then
-        handleBunk(self)
     end
 end
 
