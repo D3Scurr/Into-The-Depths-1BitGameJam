@@ -39,10 +39,9 @@ function game:enter()
 
     ScoreTimer:every(10, function()
         ObstacleSpeedMult = ObstacleSpeedMult + ObstacleSpeedAdd
-        ObstacleSpeedAdd = ObstacleSpeedAdd * 1.2
+        -- ObstacleSpeedAdd = ObstacleSpeedAdd * 1.2
 
         ObstacleSpawnMult = ObstacleSpawnMult + ObstacleSpawnAdd
-        ObstacleSpeedAdd = ObstacleSpawnAdd * 2
     end)
 
     spawnNewObstacle()

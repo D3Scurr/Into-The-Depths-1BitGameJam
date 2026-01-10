@@ -6,7 +6,8 @@ local obstacles = {
         image = love.graphics.newImage('res/img/Obstacle-box.png'),
         speed = 100,
         height = 16, width = 16,
-        isObstacle = true
+        isObstacle = true,
+        bunkCharge = 15
     },
     {
         type = 2,
@@ -15,7 +16,8 @@ local obstacles = {
         image = love.graphics.newImage('res/img/Log.png'),
         speed = 70,
         height = 16, width = 64,
-        isObstacle = true
+        isObstacle = true,
+        bunkCharge = 10
     },
     {
         type = 3,
@@ -24,7 +26,8 @@ local obstacles = {
         image = love.graphics.newImage('res/img/Slab.png'),
         speed = 200,
         height = 8, width = 16,
-        isObstacle = true
+        isObstacle = true,
+        bunkCharge = 20
     }
 }
 

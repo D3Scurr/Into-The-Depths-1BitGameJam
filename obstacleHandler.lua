@@ -6,6 +6,9 @@ local ObstacleHandler = { }
 local WarnedObstacles = { }
 local ActiveObstacles = { }
 
+local minRange = 9
+local maxRange = Config.BASE_WIDTH - 8
+
 ObstacleSpeedMult = 1
 ObstacleSpeedAdd = 0.1
 
@@ -40,6 +43,7 @@ local function createObstacleInstance(obstacleTemplate)
         speed = obstacleTemplate.speed,
         height = obstacleTemplate.height,
         width = obstacleTemplate.width,
+        bunkCharge = obstacleTemplate.bunkCharge or 0,
         isObstacle = false,
         x = 0,
         y = 0,
@@ -51,7 +55,23 @@ end
 
 function spawnNewObstacle()
     local newObstacle = createObstacleInstance(Obstacles[math.random(1,3)])
-    newObstacle.x, newObstacle.y = math.random(9, Config.BASE_WIDTH - 8 - newObstacle.width), Config.BASE_HEIGHT - newObstacle.height
+
+    local downRange = (Player.x - 1 * 16)
+    local upRange = (Player.x + 2 * 16)
+
+    if downRange < minRange then
+        downRange = minRange
+    elseif downRange > maxRange - newObstacle.width then
+        downRange = maxRange - newObstacle.width
+    end
+
+    if upRange < minRange then
+        upRange = minRange
+    elseif upRange > maxRange - newObstacle.width then
+        upRange = maxRange - newObstacle.width
+    end
+
+    newObstacle.x, newObstacle.y = math.random(downRange, upRange), Config.BASE_HEIGHT - newObstacle.height
     
     table.insert(WarnedObstacles, newObstacle)
     
@@ -91,9 +111,10 @@ local function resolveCollisions(cols, len)
                 Player.bunkMeter = 0
             else
                 if not (Player.vx == 0 and Player.vy == 0) then
-                    Player.bunkMeter = Player.bunkMeter + bunkMeterBonus
+                    Player.bunkMeter = Player.bunkMeter + col.item.bunkCharge
                 end
             end
+            Player.isBunk = false
             ScreenShake()
             destroyOldObstacle()
         end

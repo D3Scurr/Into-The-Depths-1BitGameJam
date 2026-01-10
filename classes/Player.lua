@@ -3,7 +3,9 @@ local GameOver = require('game-over')
 
 local disableBunk = false
 local bunkWasPressed = false
-local committedChargeDirection = 0
+
+local committedChargeDirectionX = 0
+local directionCommited = false
 
 function Player:new(x, y, image)
     self.x, self.y = x, y
@@ -11,8 +13,8 @@ function Player:new(x, y, image)
     self.vx, self.vy = 0, 0
     self.width, self.height = 16, 16
     self.image = love.graphics.newImage(image)
-    self.horizontalSpeed = 100
-    self.downSpeed, self.upSpeed, self.chargeSpeed = 30, 300, 150
+    self.horizontalSpeed = 70
+    self.downSpeed, self.upSpeed, self.chargeSpeed = 100, 200, 150
     self.isPlayer = true
 
     self.health = 3
@@ -54,9 +56,7 @@ local function resolveCollisions(self, cols, len)
         end
 
         if col.type == 'cross' then
-            print('col.normal.x: '..col.normal.x)
-            print('col.normal.y: '..col.normal.y)
-            if col.normal.x ~= 0 then
+            if col.normal.x ~= 0 and self.isBunk then
                 self.bunkPoints = self.bunkPoints + 1
             end
         end
@@ -98,8 +98,8 @@ local function handleDown(self)
     self.vy = self.downSpeed
 end
 
-local function handleCharge(self, direction)
-    self.vx = self.chargeSpeed * direction
+local function handleCharge(self)
+    self.vx = self.chargeSpeed * committedChargeDirectionX
 end
 
 local function stopHorizontal(self)
@@ -119,6 +119,7 @@ local function handleBunk(self)
     end, function()
         self.isBunk = false
         disableBunk = false
+        directionCommited = false
     end)
 end
 
@@ -133,13 +134,15 @@ local function handleInputs(self)
         handleBunk(self)
     end
 
-    if bunk then
+    if self.isBunk and not directionCommited then
         if left and not right then
-            committedChargeDirection = -1
+            committedChargeDirectionX = -1
+            directionCommited = true
         elseif right and not left then
-            committedChargeDirection = 1
+            committedChargeDirectionX = 1
+            directionCommited = true
         else
-            committedChargeDirection = 0
+            committedChargeDirectionX = 0
         end
     end
     
@@ -152,7 +155,9 @@ local function handleInputs(self)
             stopHorizontal(self)
         end
     else
-        handleCharge(self, committedChargeDirection)
+        if committedChargeDirectionX ~= 0 then
+            handleCharge(self)
+        end
     end
 
     if up and not down and self.y > 32 then
