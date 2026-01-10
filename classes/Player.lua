@@ -7,15 +7,25 @@ local bunkWasPressed = false
 local committedChargeDirectionX = 0
 local directionCommited = false
 
-function Player:new(x, y, image)
+local trailImage
+local trail
+
+function Player:new(x, y, image, tImage)
     self.x, self.y = x, y
     self.baseX, self.baseY = x, y
     self.vx, self.vy = 0, 0
-    self.width, self.height = 16, 16
+    self.width, self.height = 11, 14
     self.image = love.graphics.newImage(image)
     self.horizontalSpeed = 70
     self.downSpeed, self.upSpeed, self.chargeSpeed = 100, 200, 150
     self.isPlayer = true
+
+    trailImage = love.graphics.newImage(tImage)
+    trail = anim8.newGrid(11, 8, trailImage:getWidth(), trailImage:getHeight())
+
+    self.animations = { }
+    
+    self.animations.trail = anim8.newAnimation(trail('1-2', 1), 0.5)
 
     self.health = 3
     self.score = 0
@@ -111,6 +121,8 @@ local function stopVertical(self)
 end
 
 local function handleBunk(self)
+    sounds.bunk:play()
+
     self.isBunk = true
     self.bunkPoints = self.bunkPoints - 1
     disableBunk = true
@@ -178,6 +190,7 @@ local function statCheck(self)
     end
 
     if self.bunkMeter >= 100 and self.bunkPoints < self.bunkPointsCap then
+        sounds.gainBunk:play()
         self.bunkMeter = 0
         self.bunkPoints = self.bunkPoints + 1
     end
@@ -188,6 +201,8 @@ local function statCheck(self)
 end
 
 function Player:update(dt)
+    self.animations.trail:update(dt)
+
     move(self, dt)
     handleInputs(self)
     statCheck(self)
@@ -195,6 +210,10 @@ function Player:update(dt)
 end
 
 function Player:draw()
+    if self.vy > 0 then
+        self.animations.trail:draw(trailImage, self.x, self.y - trailImage:getHeight())
+    end
+
     if self.isBunk then flipColors() end
     love.graphics.draw(self.image, self.x, self.y)
     if self.isBunk then flipColors() end

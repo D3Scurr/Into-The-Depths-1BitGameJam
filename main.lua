@@ -14,12 +14,21 @@ function love.load()
     Ui = require('ui')
 
     -- Libraries
+    anim8 = require('libs.anim8')
     Bump = require('libs.bump')
     Camera = require('libs.camera')
     Gamestate = require('libs.gamestate')
     Object = require('libs.classic')
     Timer = require('libs.timer')
 
+    -- Sounds
+    sounds = {}
+
+    sounds.bunk = love.audio.newSource('res/sound/Bunk.wav', 'static' )
+    sounds.destroy = love.audio.newSource('res/sound/Destroy.wav', 'static')
+    sounds.gainBunk = love.audio.newSource('res/sound/gainBunk.wav', 'static')
+    sounds.hit = love.audio.newSource('res/sound/Hit.wav', 'static')
+    
     -- Classes
     Plr = require('classes.Player')
 
@@ -31,7 +40,7 @@ function love.load()
 
     -- Objects
     World = Bump.newWorld(16)
-    Player = Plr(Config.BASE_WIDTH / 2 - 8, Config.BASE_HEIGHT / 2 - 8, 'res/img/Player-placeholder.png')
+    Player = Plr(Config.BASE_WIDTH / 2 - 8, Config.BASE_HEIGHT / 2 - 8, 'res/img/Player.png', 'res/img/Falling-trail.png')
 
     Gamestate.registerEvents()
     Gamestate.switch(game)

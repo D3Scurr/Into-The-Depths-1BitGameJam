@@ -106,12 +106,15 @@ local function resolveCollisions(cols, len)
         local col = cols[i]
 
         if col.type == 'cross' then
+            sounds.destroy:play()
             if not Player.isBunk then
+                sounds.hit:play()
                 Player.health = Player.health - 1
                 Player.bunkMeter = 0
             else
                 if not (Player.vx == 0 and Player.vy == 0) then
                     Player.bunkMeter = Player.bunkMeter + col.item.bunkCharge
+                    Player.score = Player.score + col.item.bunkCharge * 2
                 end
             end
             Player.isBunk = false
