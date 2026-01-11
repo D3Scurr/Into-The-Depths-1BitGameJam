@@ -44,7 +44,7 @@ function love.load()
 
     -- Objects
     World = Bump.newWorld(16)
-    Player = Plr(Config.BASE_WIDTH / 2 - 8, Config.BASE_HEIGHT / 2 - 8, 'res/img/Player.png', 'res/img/Falling-trail.png')
+    Player = Plr(Config.BASE_WIDTH / 2 - 8, Config.BASE_HEIGHT / 2 - 8, 'res/img/Player.png', 'res/img/Falling-trail.png', 'res/img/Bunk-animation.png')
 
     Gamestate.registerEvents()
     Gamestate.switch(game)

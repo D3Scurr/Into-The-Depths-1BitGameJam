@@ -8,9 +8,12 @@ local committedChargeDirectionX = 0
 local directionCommited = false
 
 local trailImage
-local trail
+local trailGrid
 
-function Player:new(x, y, image, tImage)
+local bunkImage
+local bunkGrid
+
+function Player:new(x, y, image, tImage, bImage)
     self.x, self.y = x, y
     self.baseX, self.baseY = x, y
     self.vx, self.vy = 0, 0
@@ -21,11 +24,15 @@ function Player:new(x, y, image, tImage)
     self.isPlayer = true
 
     trailImage = love.graphics.newImage(tImage)
-    trail = anim8.newGrid(11, 8, trailImage:getWidth(), trailImage:getHeight())
+    trailGrid = anim8.newGrid(11, 8, trailImage:getWidth(), trailImage:getHeight())
+
+    bunkImage = love.graphics.newImage(bImage)
+    bunkGrid = anim8.newGrid(11, 14, bunkImage:getWidth(), bunkImage:getHeight())
 
     self.animations = { }
     
-    self.animations.trail = anim8.newAnimation(trail('1-2', 1), 0.5)
+    self.animations.trail = anim8.newAnimation(trailGrid('1-2', 1), 0.5)
+    self.animations.bunk = anim8.newAnimation(bunkGrid('1-8', 1), 0.0625)
 
     self.health = 3
     self.score = 0
@@ -203,6 +210,10 @@ end
 function Player:update(dt)
     self.animations.trail:update(dt)
 
+    if self.isBunk then
+        self.animations.bunk:update(dt)
+    end
+
     move(self, dt)
     handleInputs(self)
     statCheck(self)
@@ -214,9 +225,11 @@ function Player:draw()
         self.animations.trail:draw(trailImage, self.x, self.y - trailImage:getHeight())
     end
 
-    if self.isBunk then flipColors() end
-    love.graphics.draw(self.image, self.x, self.y)
-    if self.isBunk then flipColors() end
+    if self.isBunk then
+        self.animations.bunk:draw(bunkImage, self.x, self.y)
+    else
+        love.graphics.draw(self.image, self.x, self.y)
+    end
 end
 
 return Player
