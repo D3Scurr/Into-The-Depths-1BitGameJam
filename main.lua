@@ -1,12 +1,14 @@
-local game = require('game')
-local GameOver = require('game-over')
+game = require('game')
+GameOver = require('game-over')
+pause = require('pause')
+menu = require('menu')
 
-
+Paused = false
 
 function love.load()
     -- Config
-    HighScore = 0
     Config = require('config')
+    HighScore = 0
     love.graphics.setDefaultFilter('nearest', 'nearest')
     flipped = false
     love.graphics.setNewFont('PressStart2P.ttf')
@@ -34,6 +36,8 @@ function love.load()
     sounds.destroy = love.audio.newSource('res/sound/Destroy.wav', 'static')
     sounds.gainBunk = love.audio.newSource('res/sound/GainBunk.wav', 'static')
     sounds.hit = love.audio.newSource('res/sound/Hit.wav', 'static')
+    sounds.pause = love.audio.newSource('res/sound/pause.wav', 'static')
+    sounds.unPause = love.audio.newSource('res/sound/unPause.wav', 'static')
     
     -- Classes
     Plr = require('classes.Player')
@@ -49,25 +53,26 @@ function love.load()
     Player = Plr(Config.BASE_WIDTH / 2 - 8, Config.BASE_HEIGHT / 2 - 8, 'res/img/Player.png', 'res/img/Falling-trail.png', 'res/img/Bunk-animation.png')
 
     Gamestate.registerEvents()
-    Gamestate.switch(game)
-end
-
-function flipColors()
-    if not flipped then
-        love.graphics.setShader(InvertShader)
-        flipped = true
-    else
-        love.graphics.setShader()
-        flipped = false
-    end
+    Gamestate.switch(menu)
 end
 
 function love.keypressed(key)
-    if key == 'f' then
-        flipColors()
+    if key == 's' and Gamestate.current() == menu then
+        Gamestate.push(settings)
     end
-    
-    if key == 'r' and Gamestate.current() == GameOver then
+
+    if key == 'p' then
+        if Gamestate.current() == game then
+            Gamestate.push(pause)
+        elseif Gamestate.current() == pause then
+            Gamestate.pop(pause)
+        elseif Gamestate.current() == menu then
+            Gamestate.switch(game)
+        end
+        
+    end
+
+    if key == 'r' then
         Gamestate.switch(game)
     end
 end
