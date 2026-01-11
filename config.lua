@@ -5,7 +5,7 @@ local Config = {
     BASE_HEIGHT = 128,
     
     -- Scale multiplier
-    SCALE = 6,
+    SCALE = 3,
 }
 
 -- Calculated values

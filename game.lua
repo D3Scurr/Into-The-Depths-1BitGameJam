@@ -20,6 +20,15 @@ function game:enter()
     ObstacleHandler:reset()
     Player:reset()
 
+    print("About to play theme")
+    print("sounds.theme:", sounds.theme)
+    if sounds.theme then
+        sounds.theme:play()
+        print("Theme playing")
+    else
+        print("ERROR: sounds.theme is nil")
+    end
+
     -- Timers
     BunkTimer = Timer()
     BunkMeterTimer = Timer()
@@ -91,6 +100,10 @@ function game:draw()
         ObstacleHandler:draw()
         Ui:draw()
     Cam:detach()
+end
+
+function game:leave()
+    sounds.theme:stop()
 end
 
 return game

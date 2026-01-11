@@ -24,9 +24,13 @@ function love.load()
     -- Sounds
     sounds = {}
 
+    sounds.theme = love.audio.newSource('res/sound/Bunkin.mp3', 'stream')
+    sounds.theme:setVolume(0.5)
+    sounds.theme:setLooping(true)
+
     sounds.bunk = love.audio.newSource('res/sound/Bunk.wav', 'static' )
     sounds.destroy = love.audio.newSource('res/sound/Destroy.wav', 'static')
-    sounds.gainBunk = love.audio.newSource('res/sound/gainBunk.wav', 'static')
+    sounds.gainBunk = love.audio.newSource('res/sound/GainBunk.wav', 'static')
     sounds.hit = love.audio.newSource('res/sound/Hit.wav', 'static')
     
     -- Classes
