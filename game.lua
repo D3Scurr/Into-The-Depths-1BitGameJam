@@ -2,6 +2,10 @@ local game = { }
 
 local bunkAdd = 2
 
+love.graphics.setDefaultFilter("nearest", "nearest")
+
+local BackgroundImage
+
 function game:init()
     -- Wall
     local leftWall = { isWall = true }
@@ -10,8 +14,9 @@ function game:init()
     World:add(leftWall, 0, 0, 8, Config.BASE_HEIGHT)
     World:add(rightWall, Config.BASE_WIDTH-8, 0, 8, Config.BASE_HEIGHT)
 
-    WallImageLeft = love.graphics.newImage('res/img/Wall-left.png')
-    WallImageRight = love.graphics.newImage('res/img/Wall-right.png')
+    BackgroundImage = love.graphics.newImage('res/img/Background-animation.png')
+    local BackgroundGrid = anim8.newGrid(128, 128, BackgroundImage:getWidth(), BackgroundImage:getHeight())
+    BackgroundAnimation = anim8.newAnimation(BackgroundGrid('1-16', 1), 0.025)
 
     Cam = Camera()
 end
@@ -20,14 +25,7 @@ function game:enter()
     ObstacleHandler:reset()
     Player:reset()
 
-    print("About to play theme")
-    print("sounds.theme:", sounds.theme)
-    if sounds.theme then
-        sounds.theme:play()
-        print("Theme playing")
-    else
-        print("ERROR: sounds.theme is nil")
-    end
+    sounds.theme:play()
 
     -- Timers
     BunkTimer = Timer()
@@ -42,7 +40,7 @@ function game:enter()
         end
     end)
 
-    ScoreTimer:every(0.1, function()
+    ScoreTimer:every(0.2, function()
         Player.score = Player.score + 1
     end)
 
@@ -77,25 +75,18 @@ end
 
 function game:update(dt)
     Cam:lookAt(Config.WINDOW_WIDTH/2, Config.WINDOW_HEIGHT/2)
-
     updateTimers(dt)
-
+    BackgroundAnimation:update(dt)
     Player:update(dt)
-
     ObstacleHandler:update(dt)
 end
 
 -- * game:draw * --
 
-local function drawWalls()
-    love.graphics.draw(WallImageLeft, 0, 0)
-    love.graphics.draw(WallImageRight, Config.BASE_WIDTH-8, 0)
-end
-
 function game:draw()
     Cam:attach()
         love.graphics.scale(Config.SCALE, Config.SCALE)
-        drawWalls()
+        BackgroundAnimation:draw(BackgroundImage, 0, 0)
         Player:draw()
         ObstacleHandler:draw()
         Ui:draw()

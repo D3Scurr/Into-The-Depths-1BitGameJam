@@ -1,6 +1,8 @@
 local game = require('game')
 local GameOver = require('game-over')
 
+
+
 function love.load()
     -- Config
     HighScore = 0
