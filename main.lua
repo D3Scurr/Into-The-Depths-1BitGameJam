@@ -37,7 +37,7 @@ function love.load()
     sounds.gainBunk = love.audio.newSource('res/sound/GainBunk.wav', 'static')
     sounds.hit = love.audio.newSource('res/sound/Hit.wav', 'static')
     sounds.pause = love.audio.newSource('res/sound/pause.wav', 'static')
-    sounds.unPause = love.audio.newSource('res/sound/unPause.wav', 'static')
+    sounds.unPause = love.audio.newSource('res/sound/unpause.wav', 'static')
     
     -- Classes
     Plr = require('classes.Player')
