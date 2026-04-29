@@ -1,0 +1,23 @@
+HOW TO PLAY
+
+HOW TO WIN?
+
+You can't.
+Dodge the obstacles, bunk into objects and get as high of a score as you can.
+
+Controls:
+arrow keys - move player
+space - go into bunk state
+p - in game pause
+
+BUNK STATE
+You can activate bunk state by having >1 of bunk points (right bottom of the panel) that you normally get by filling up
+the bunk meter (right top of the panel) it charges over time and by bunking horizontally into an object.
+
+In bunk state you are invincible and gain points from bunking into objects falling at you.
+Also if you bunk horizontally you gain a bunk point.
+
+Options
+You can change the scale of the window by entering a value in Scale.txt (the default is 3)
+
+HAVE FUN PLAYING THE GAME!!!
